@@ -1,28 +1,101 @@
-import sys
-from pathlib import Path
-from MIP import test_instance
+import argparse
+from MIP import MIP_solver  
+
 
 def main():
-    if len(sys.argv) != 4:
-        print("Usage: python main.py <instance_number> <solver_name> <result_folder>")
-        sys.exit(1)
-
-    instance_number = int(sys.argv[1])
-    solver_name = sys.argv[2]
-    result_folder = sys.argv[3]
-
-    # Define the folder containing the instances
-    instances_folder = Path.cwd() / 'instances'
-
-    # Format the filename to match the pattern 'instXX.dat'
-    filename = f'inst{instance_number:02d}.dat'
-    file_path = instances_folder / filename
-    #print(filename,file_path,instances_folder)
-    # Test the instance using the test_instance function
-    time, obj = test_instance(file_path, filename, result_folder=result_folder, solver_name=solver_name)
+    parser = argparse.ArgumentParser(description="Solve the Vehicle Routing Problem using various methods.")
     
-    # Print the results for the instance
-    print(f"Instance: {filename} - Time: {time}s - Objective Value: {obj}")
+    parser.add_argument(
+        'instance_number',
+        type=int,
+        help='The number of the instance to solve.'
+    )
+
+    parser.add_argument(
+        '--timelimit',
+        type=int,
+        default=300,
+        help='Time limit for the solver in seconds (default: 300).'
+    )
+    
+    parser.add_argument(
+        '--save_directory',
+        default='res',
+        help='Directory to save the results (default: res).'
+    )
+        
+    parser.add_argument(
+        '--method',
+        choices=['MIP', 'CP','SAT'],
+        default='CP',
+        help='The method to use for solving the problem (default: CP).'
+    )
+
+    parser.add_argument(
+        '--verbosity',
+        choices=['s', 'v'],
+        default='full',
+        help='Output verbosity level (default: full).'
+    )
+    # Arguments specific to MIP
+    parser.add_argument(
+        '--solver',
+        choices=['CBC', 'GLPK', 'ALL'],
+        default='CBC',
+        help='The solver to use for MIP (default: CBC). This is ignored if method is not MIP.'
+    )
+    
+    parser.add_argument(
+        '--variation',
+        type=int,
+        choices=[0, 1],
+        default=0,
+        help='The MTZ variation to use for MIP (default: 0). This is ignored if method is not MIP.'
+    )
+
+    args = parser.parse_args()
+
+    print(args)
+        
+    if args.method == 'CP':
+        # Initialize and solve using CP-SAT
+        # Example: Assuming a CPSAT_solver class exists
+        # solver = CPSAT_solver(
+        #     instance_number=args.instance_number,
+        #     timelimit=args.timelimit,
+        #     save_directory=args.save_directory,
+        #     variation=args.variation
+        # )
+        #
+        # results = solver.solve()
+        pass
+
+    elif args.method == 'SAT':
+        # Initialize and solve using CP-SAT
+        # Example: Assuming a CPSAT_solver class exists
+        # solver = CPSAT_solver(
+        #     instance_number=args.instance_number,
+        #     timelimit=args.timelimit,
+        #     save_directory=args.save_directory,
+        #     variation=args.variation
+        # )
+        #
+        # results = solver.solve()
+        pass
+
+    elif args.method == 'MIP':
+        solver = MIP_solver(
+            instance_number=args.instance_number,
+            timelimit=args.timelimit,
+            save_directory=args.save_directory+'/MIP',
+            verbosity=args.verbosity,
+            solver_name=args.solver,
+            variation=args.variation
+        )
+    print('Solving instance')
+    solver.solve()
+    print(f'Results can be found in {args.save_directory} folder')
+
 
 if __name__ == "__main__":
     main()
