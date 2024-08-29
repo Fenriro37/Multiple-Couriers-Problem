@@ -7,11 +7,12 @@ from datetime import datetime
 from pulp import LpProblem, LpMinimize, LpVariable, LpBinary, lpSum, PULP_CBC_CMD, GLPK_CMD, LpStatus, LpInteger
 
 class MIP_solver:
-    def __init__(self, instance_number, timelimit=300, save_directory='res/MIP', solver_name='CBC', variation=0):
+    def __init__(self, instance_number, timelimit=300, save_directory='res/MIP', verbosity='s', solver_name='CBC', variation=0):
         """   
         :param instance_number: Number of the instance to solve.
         :param timelimit: Time limit for the solver.
         :param save_directory: Directory to save the results.
+        :param verbosity: Print minimal or full output information (s or v).
         :param solver_name: Name of the solver to use ('CBC', 'GLPK', or 'ALL').
         :param variation: Which variation of MTZ constraints to use (0 or 1).
         """
@@ -23,6 +24,7 @@ class MIP_solver:
         self.filename = filename
         self.timelimit = timelimit
         self.save_directory = save_directory
+        self.verbosity = 1 if verbosity == 'v' else 0
         self.solver_name = solver_name
         self.variation = variation
         
@@ -169,9 +171,9 @@ class MIP_solver:
                 remaining_time = int(max(0, math.ceil(self.timelimit - preprocessing_time)))
 
                 if solver_name == 'GLPK':
-                    solver = GLPK_CMD(timeLimit=remaining_time)
+                    solver = GLPK_CMD(msg=self.verbosity,timeLimit=remaining_time)
                 else: 
-                    solver = PULP_CBC_CMD(timeLimit=remaining_time)
+                    solver = PULP_CBC_CMD(msg=self.verbosity,timeLimit=remaining_time)
 
                 variation_suffix = "_MTZ_original" if var == 0 else "_MTZ_revisited"
                 solver_name_with_variation = solver_name + variation_suffix
