@@ -77,17 +77,13 @@ def exactly_one_he(bool_vars, name):
 
 def read_dat_file(filename):
     with open(filename, 'r') as file:
-        # Read m and n
         m = int(file.readline().strip())
         n = int(file.readline().strip())
         
-        # Read l values
         l = list(map(int, file.readline().split()))
         
-        # Read s values
         s = list(map(int, file.readline().split()))
         
-        # Read D matrix
         D = []
         for _ in range(n + 1):
             row = list(map(int, file.readline().split()))
@@ -105,14 +101,11 @@ def get_dict(time, model, dist, x, optimal):
     }
 
 def calculate_lower_bound(D):
-    # The origin is the last point (index n)
     origin = len(D) - 1
     lower_bound = 0
     
-    # Calculate distances from origin to all other points
     distances_from_origin = D[origin][:-1]
     
-    # Calculate distances to origin from all other points
     distances_to_origin = [row[origin] for row in D[:-1]]
 
     for i in range(len(distances_from_origin)):
@@ -126,13 +119,10 @@ def calculate_upper_bound(D, n, m):
     else:
         stops = n//m
 
-    # Flatten the matrix into a 1D list
     flat_D = [distance for row in D for distance in row]
     
-    # Sort the flattened list in descending order
     sorted_D = sorted(flat_D, reverse=True)
     
-    # Return the first n values
     return sum(sorted_D[:stops+1])
 
 def solve_mcp_nosym(m, n, l, s, D, timeout = 300):
@@ -161,11 +151,6 @@ def solve_mcp_nosym(m, n, l, s, D, timeout = 300):
         for k in range(n+2):
             solver.add(exactly_one([x[i][j][k] for j in range(n+1)], name=f"visit_e1_{i}_{k}"))
     
-    # 3. Each point (except depot) is visited at most once by each courier SEEMS LIKE REDUNDANT
-    # for i in range(m):
-    #     for j in range(n):  # Exclude depot
-    #         solver.add(at_most_one([x[i][j][k] for k in range(n+2)], name=f"visit_m1_{i}_{j}"))
-    
     # 4. Each point (except depot) is visited exactly once by all couriers combined
     for j in range(n):  # Exclude depot
         solver.add(exactly_one([x[i][j][k] for i in range(m) for k in range(1,n+1)], name=f"point_e1_{j}"))
@@ -173,15 +158,6 @@ def solve_mcp_nosym(m, n, l, s, D, timeout = 300):
     # 5. Respect load size for each courier
     for i in range(m):
         solver.add(Sum([If(x[i][j][k], s[j], 0) for j in range(n) for k in range(1,n+1)]) <= l[i])
-    
-    # 6. At least one stop
-    # New constraint: Each courier must leave the origin (make at least one stop)
-    # for i in range(m):
-    #     solver.add(at_least_one([x[i][j][1] for j in range(n)]))  # j from 0 to n (non-depot locations)
-    
-    # testing(goodfor7th)
-    # for i in range(m):
-    #     solver.add(at_least_one([x[i][j][2] for j in range(n)]))  # j from 0 to n (non-depot locations)
 
     loads = list(enumerate(l))
     
@@ -235,12 +211,9 @@ def solve_mcp_nosym(m, n, l, s, D, timeout = 300):
     # Add a constraint to make max_distance as small as possible
     solver.add(Or([max_distance == distance for distance in courier_distances]))
 
-    # set lower and upper bounds ########################### Maybe some implied constraints such that I do not need to add constraints for fair division since bounds take care of that?
+    # set lower and upper bounds 
     solver.add(max_distance>=calculate_lower_bound(D))
     solver.add(max_distance<=calculate_upper_bound(D, n, m))
-
-    # Minimize max_distance
-    # solver.minimize(max_distance)
     
 
     while satisfiable:
@@ -272,9 +245,6 @@ def solve_mcp_nosym(m, n, l, s, D, timeout = 300):
                 return best_solution     
             
     best_solution['optimal'] = True
-    # model = solver.model()
-    # best_value = model.eval(max_distance)
-    # best_solution = get_dict(try_time, model, best_value, x, optimal)
     return best_solution
 
 def solve_mcp_sym(m, n, l, s, D, timeout = 300):
@@ -303,11 +273,6 @@ def solve_mcp_sym(m, n, l, s, D, timeout = 300):
         for k in range(n+2):
             solver.add(exactly_one([x[i][j][k] for j in range(n+1)], name=f"visit_e1_{i}_{k}"))
     
-    # 3. Each point (except depot) is visited at most once by each courier SEEMS LIKE REDUNDANT
-    # for i in range(m):
-    #     for j in range(n):  # Exclude depot
-    #         solver.add(at_most_one([x[i][j][k] for k in range(n+2)], name=f"visit_m1_{i}_{j}"))
-    
     # 4. Each point (except depot) is visited exactly once by all couriers combined
     for j in range(n):  # Exclude depot
         solver.add(exactly_one([x[i][j][k] for i in range(m) for k in range(1,n+1)], name=f"point_e1_{j}"))
@@ -315,15 +280,6 @@ def solve_mcp_sym(m, n, l, s, D, timeout = 300):
     # 5. Respect load size for each courier
     for i in range(m):
         solver.add(Sum([If(x[i][j][k], s[j], 0) for j in range(n) for k in range(1,n+1)]) <= l[i])
-    
-    # 6. At least one stop
-    # New constraint: Each courier must leave the origin (make at least one stop)
-    # for i in range(m):
-    #     solver.add(at_least_one([x[i][j][1] for j in range(n)]))  # j from 0 to n (non-depot locations)
-    
-    # testing(goodfor7th)
-    # for i in range(m):
-    #     solver.add(at_least_one([x[i][j][2] for j in range(n)]))  # j from 0 to n (non-depot locations)
 
     loads = list(enumerate(l))
     
@@ -404,12 +360,9 @@ def solve_mcp_sym(m, n, l, s, D, timeout = 300):
     # Add a constraint to make max_distance as small as possible
     solver.add(Or([max_distance == distance for distance in courier_distances]))
 
-    # set lower and upper bounds ########################### Maybe some implied constraints such that I do not need to add constraints for fair division since bounds take care of that?
+    # set lower and upper bounds 
     solver.add(max_distance>=calculate_lower_bound(D))
     solver.add(max_distance<=calculate_upper_bound(D, n, m))
-
-    # Minimize max_distance
-    # solver.minimize(max_distance)
     
 
     while satisfiable:
@@ -426,13 +379,11 @@ def solve_mcp_sym(m, n, l, s, D, timeout = 300):
             iter += 1
             model = solver.model()
             best_value = model.eval(max_distance)
-            # print(iter)
-            # print(best_value)
+
             best_solution = get_dict(try_time, model, best_value, x, False)
             solver.push()
             solver.add(max_distance < best_value)
             solver.set("timeout", 300000-(try_time*1000))
-            # return model, max_distance, x
         if timeout - try_time <= 0:
             optimal = False
             if iter == 0:
@@ -441,9 +392,6 @@ def solve_mcp_sym(m, n, l, s, D, timeout = 300):
                 return best_solution     
             
     best_solution['optimal'] = True
-    # model = solver.model()
-    # best_value = model.eval(max_distance)
-    # best_solution = get_dict(try_time, model, best_value, x, optimal)
     return best_solution
 
 if __name__ == '__main__':
