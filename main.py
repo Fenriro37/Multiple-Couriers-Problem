@@ -1,6 +1,7 @@
 import argparse
 from MIP import MIP_solver  
 from SAT.SATclass import SAT_solver
+from CP.CSP_Model import CP_solver
 
 
 def main():
@@ -59,16 +60,15 @@ def main():
     print(args)
         
     if args.method == 'CP':
-        # Initialize and solve using CP-SAT
-        # Example: Assuming a CPSAT_solver class exists
-        # solver = CPSAT_solver(
-        #     instance_number=args.instance_number,
-        #     timelimit=args.timelimit,
-        #     save_directory=args.save_directory,
-        #     variation=args.variation
-        # )
-        #
-        # results = solver.solve()
+        solver = CP_solver(
+            instance_number=args.instance_number,
+            timelimit=args.timelimit,
+            save_directory=args.save_directory+'/CP',
+        )
+        if args.instance_number == 0:
+            solver.solve_all()
+        else:
+            solver.solve()
         pass
 
     elif args.method == 'SAT':
