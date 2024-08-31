@@ -51,12 +51,14 @@ class CP_solver:
                     sol[k - 1].append(next_node)  
                     current_node = next_node 
 
-        return {
-            "time": time_taken,  
-            "optimal": result.status == minizinc.result.Status.SATISFIED,
-            "obj": result["maximum"] if result.solution is not None else None,
-            "sol": sol  
-        }
+            return {
+                "time": time_taken,  
+                "optimal": result.status == minizinc.result.Status.SATISFIED,
+                "obj": result["maximum"] if result.solution is not None else None,
+                "sol": sol  
+            }
+        else:
+            return None
 
     def solve(self):
         model_with_symmetry = minizinc.Model('CP_model(with SB).mzn')
@@ -76,7 +78,7 @@ class CP_solver:
             instance_gecode = minizinc.Instance(gecode, model)
             instance_chuffed = minizinc.Instance(chuffed, model)
 
-            for instance in [instance_gecode, instance_chuffed]:
+            for instance_name, instance in [("gecode", instance_gecode), ("chuffed", instance_chuffed)]:
                 instance["m"] = m
                 instance["n"] = n
                 instance["l"] = l
@@ -85,12 +87,16 @@ class CP_solver:
                 instance["up_bound"] = up_bound
                 instance["low_bound"] = low_bound
 
-            output[f"gecode_{model_name}"] = self.solve_instance(instance_gecode, "gecode", m, n)
-            output[f"chuffed_{model_name}"] = self.solve_instance(instance_chuffed, "chuffed", m, n)
+                result = self.solve_instance(instance, instance_name, m, n)
+                if result and result["obj"] is not None:
+                    output[f"{instance_name}_{model_name}"] = result
 
-        json_filename = f'{self.instance_number:02d}.json'
-        json_path = os.path.join(self.results_dir, json_filename)
-        with open(json_path, 'w') as f:
-            json.dump(output, f, indent=4)
-        
-        print(f"Results for {instance_file} saved to {json_filename}.")
+        if output:
+            json_filename = f'{self.instance_number:02d}.json'
+            json_path = os.path.join(self.results_dir, json_filename)
+            with open(json_path, 'w') as f:
+                json.dump(output, f, indent=4)
+            
+            print(f"Results for {instance_file} saved to {json_filename}.")
+        else:
+            print(f"No valid results for {instance_file}, no JSON file created.")
