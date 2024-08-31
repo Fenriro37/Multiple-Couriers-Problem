@@ -100,3 +100,10 @@ class CP_solver:
             print(f"Results for {instance_file} saved to {json_filename}.")
         else:
             print(f"No valid results for {instance_file}, no JSON file created.")
+    
+    def solve_all(self):
+        instance_list = [1, 2, 3, 4, 6, 7, 8, 9, 10, 11, 12, 16, 19, 21]
+        for instance_number in instance_list:
+            print(f"Solving instance {instance_number:02d}...")
+            self.instance_number = instance_number
+            self.solve()
