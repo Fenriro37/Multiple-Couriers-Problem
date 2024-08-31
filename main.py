@@ -1,5 +1,5 @@
 import argparse
-# from MIP import MIP_solver  
+from MIP import MIP_solver  
 from SAT.SATclass import SAT_solver
 
 
