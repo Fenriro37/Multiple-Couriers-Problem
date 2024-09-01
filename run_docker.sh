@@ -1,1 +1,1 @@
-docker run -it CDMO /bin/bash
+docker run -it cdmo /bin/bash

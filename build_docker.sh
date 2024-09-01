@@ -1,1 +1,1 @@
-docker build -t CDMO.
+docker build -t cdmo .
