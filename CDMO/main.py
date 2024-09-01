@@ -1,6 +1,6 @@
 import argparse
-#from MIP.MIPclass import MIP_solver  
-#from SAT.SATclass import SAT_solver
+from MIP.MIPclass import MIP_solver  
+from SAT.SATclass import SAT_solver
 from CP.CSP_Model import CP_solver
 
 
@@ -63,7 +63,7 @@ def main():
         solver = CP_solver(
             instance_number=args.instance_number,
             timelimit=args.timelimit,
-            save_directory=args.save_directory+'/CP',
+            save_directory=args.save_directory,
         )
         if args.instance_number == 0:
             solver.solve_all()
@@ -71,26 +71,26 @@ def main():
             solver.solve()
         pass
 
-    # elif args.method == 'SAT':
-    #     solver = SAT_solver(
-    #         instance_number=args.instance_number,
-    #         timelimit=args.timelimit,
-    #         save_directory=args.save_directory+'/SAT',
-    #     )
-    #     if args.instance_number == 0:
-    #         solver.solve_all()
-    #     else:
-    #         solver.solve()
+    elif args.method == 'SAT':
+        solver = SAT_solver(
+            instance_number=args.instance_number,
+            timelimit=args.timelimit,
+            save_directory=args.save_directory+'/SAT',
+        )
+        if args.instance_number == 0:
+            solver.solve_all()
+        else:
+            solver.solve()
 
-    # elif args.method == 'MIP':
-    #     solver = MIP_solver(
-    #         instance_number=args.instance_number,
-    #         timelimit=args.timelimit,
-    #         save_directory=args.save_directory+'/MIP',
-    #         verbosity=args.verbosity,
-    #         solver_name=args.solver,
-    #         variation=args.variation
-    #     )
+    elif args.method == 'MIP':
+        solver = MIP_solver(
+            instance_number=args.instance_number,
+            timelimit=args.timelimit,
+            save_directory=args.save_directory+'/MIP',
+            verbosity=args.verbosity,
+            solver_name=args.solver,
+            variation=args.variation
+        )
         if args.instance_number == 0:
             solver.solve_all()
         else:
