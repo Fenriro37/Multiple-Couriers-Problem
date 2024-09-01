@@ -22,15 +22,15 @@ You can run experiments by passing various arguments to the script. Here are the
 - --solver (optional): Solver to use for MIP. Choices are CBC, GLPK, ALL. Default is CBC.
 - --variation (optional): MTZ variation to use for MIP. Choices are 0, 1. Default is 0.
 
-- Run All Instances with CP Method:
+ Run All Instances with CP Method:
   ```
   docker run -v ${PWD}/res:/CDMO/res cdmo_project 0 --method CP
   ```
-- Run All Instances with SAT  Method:
+ Run All Instances with SAT  Method:
   ```
   docker run -v ${PWD}/res:/CDMO/res cdmo_project 0 --method SAT
   ```
-- Run All Instances with MIP  Method:
+ Run All Instances with MIP  Method:
   ```
   docker run -v ${PWD}/res:/CDMO/res cdmo_project 0 --method MIP --solver ALL
   ```
