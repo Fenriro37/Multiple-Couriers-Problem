@@ -8,8 +8,10 @@ To build the Docker image for this project, use the following command:
 docker build -t cdmo_project .
 ```
 ## Running the Docker Container
+To run a terminal inside the Docker image, use the following command:
+
 ```
-docker run -v ${PWD}/res:/CDMO/res cdmo_project instance_number --method CP 
+docker run -it cdmo_project /bin/bash
 ```
 ## Running Experiments
 
@@ -22,16 +24,21 @@ You can run experiments by passing various arguments to the script. Here are the
 - --solver (optional): Solver to use for MIP. Choices are CBC, GLPK, ALL. Default is CBC.
 - --variation (optional): MTZ variation to use for MIP. Choices are 0, 1. Default is 0.
 
+Example 
+```
+python main.py 1 --method CP --timelimit 300
+```
+
  Run All Instances with CP Method:
   ```
-  docker run -v ${PWD}/res:/CDMO/res cdmo_project 0 --method CP
+  python main.py 0 --method CP
   ```
  Run All Instances with SAT  Method:
   ```
-  docker run -v ${PWD}/res:/CDMO/res cdmo_project 0 --method SAT
+  python main.py 0 --method SAT
   ```
  Run All Instances with MIP  Method:
   ```
-  docker run -v ${PWD}/res:/CDMO/res cdmo_project 0 --method MIP --solver ALL
+  python main.py 0 --method MIP --solver ALL
   ```
 To run all experiments, you can concatenate these three commands. Note that instances that are not solved are excluded from this method to streamline the process.
