@@ -1,0 +1,110 @@
+{
+    "gecode_with_symmetry": {
+        "time": 0,
+        "optimal": true,
+        "obj": 226,
+        "sol": [
+            [
+                1,
+                4
+            ],
+            [
+                3,
+                9
+            ],
+            [
+                2,
+                7
+            ],
+            [
+                5
+            ],
+            [
+                6
+            ],
+            [
+                8
+            ]
+        ]
+    },
+    "chuffed_with_symmetry": {
+        "time": 3,
+        "optimal": true,
+        "obj": 226,
+        "sol": [
+            [
+                1,
+                4
+            ],
+            [
+                3
+            ],
+            [
+                2,
+                7
+            ],
+            [
+                5,
+                9
+            ],
+            [
+                6
+            ],
+            [
+                8
+            ]
+        ]
+    },
+    "gecode_without_symmetry": {
+        "time": 20,
+        "optimal": true,
+        "obj": 226,
+        "sol": [
+            [],
+            [],
+            [
+                6,
+                8
+            ],
+            [
+                5,
+                9
+            ],
+            [
+                7,
+                2,
+                3
+            ],
+            [
+                1,
+                4
+            ]
+        ]
+    },
+    "chuffed_without_symmetry": {
+        "time": 1,
+        "optimal": true,
+        "obj": 226,
+        "sol": [
+            [],
+            [],
+            [
+                6,
+                8
+            ],
+            [
+                5,
+                9
+            ],
+            [
+                2,
+                7,
+                3
+            ],
+            [
+                1,
+                4
+            ]
+        ]
+    }
+}

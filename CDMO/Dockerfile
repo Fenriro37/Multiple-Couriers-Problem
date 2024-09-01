@@ -24,5 +24,5 @@ RUN pip3 install minizinc numpy pulp z3-solver
 
 COPY . .
 
-ENTRYPOINT ["python3", "main.py"]
+# ENTRYPOINT ["python3", "main.py"]
 

@@ -217,7 +217,7 @@ class MIP_solver:
 
     def solve_all(self):
         instance_numbers = list(range(1, 11)) + [13, 16]
-
+        # instance_numbers = list(range(1,6))
         for instance_number in instance_numbers:
             print(f"Solving instance {instance_number}")
 
