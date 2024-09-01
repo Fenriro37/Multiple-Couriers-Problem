@@ -229,4 +229,4 @@ class MIP_solver:
                         solver_name=self.solver_name,
                         variation=self.variation)
 
-        self.solve()
+            self.solve()
