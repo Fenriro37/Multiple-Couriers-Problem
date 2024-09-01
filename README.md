@@ -34,4 +34,4 @@ You can run experiments by passing various arguments to the script. Here are the
   ```
   docker run -v ${PWD}/res:/CDMO/res cdmo_project 0 --method MIP --solver ALL
   ```
-
+To run all experiments, you can concatenate these three commands. Note that instances that are not solved are excluded from this method to streamline the process.
