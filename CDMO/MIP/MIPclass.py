@@ -105,7 +105,7 @@ class MIP_solver:
         
         if self.variation == 0:
             # MTZ Constraints (Variation 0)
-            self.u = LpVariable.dicts("u", (range(self.instance_data['couriers']), range(self.instance_data['nodes'] - 1)), lowBound=0, upBound=self.instance_data['nodes'] - 1, cat=LpInteger)
+            self.u = LpVariable.dicts("u", (range(self.instance_data['couriers']), range(self.instance_data['nodes'] - 1)), lowBound=1, upBound=self.instance_data['nodes'] - 1, cat=LpInteger)
         else:
             # MTZ Constraints (Variation 1)
             self.u = {k: {i: LpVariable(f"u_{i}_courier_{k}", lowBound=self.instance_data['demands'][i], upBound=self.instance_data['capacities'][k], cat=LpInteger) for i in range(self.instance_data['nodes'] - 1)} for k in range(self.instance_data['couriers'])}
